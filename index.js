@@ -28,8 +28,9 @@ app.post("/chat", async (req, res) => {
         const userMessage = req.body.message.toLowerCase();
         let reply = "Sorry, I don't understand. Try asking about admissions, courses, faculty, or contact info.";
 
+        // Check if the user's message contains any keyword from JSON
         for (const key in universityData) {
-            if (userMessage.includes(key)) {
+            if (userMessage.includes(key)) {  // Fuzzy matching
                 reply = universityData[key];
                 break;
             }
