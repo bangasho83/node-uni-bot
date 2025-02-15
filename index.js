@@ -13,6 +13,7 @@ app.use(express.static(path.join(__dirname, "public"))); // Serve static files
 let universityData = {}; 
 try {
     universityData = JSON.parse(fs.readFileSync("university_data.json", "utf8"));
+    console.log("Loaded University Data:", universityData);  // 🔍 Debug log
 } catch (error) {
     console.error("Error reading JSON file:", error);
 }
@@ -28,7 +29,7 @@ app.post("/chat", async (req, res) => {
         const userMessage = req.body.message.toLowerCase();
         let reply = "Sorry, I don't understand. Try asking about admissions, courses, faculty, or contact info.";
 
-        // Check if the user's message contains any keyword from JSON
+        // Improved fuzzy matching logic
         const keywords = Object.keys(universityData);
         for (const key of keywords) {
             const regex = new RegExp(`\\b${key}\\b`, "i"); // Word boundary match
@@ -44,7 +45,6 @@ app.post("/chat", async (req, res) => {
         res.status(500).json({ error: "Internal Server Error" });
     }
 });
-
 
 // Start the server
 app.listen(port, () => {
