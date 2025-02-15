@@ -10,7 +10,7 @@ app.use(express.json());
 app.use(cors());
 
 // API Route for ChatGPT
-app.post("/api/chat", async (req, res) => {
+app.post("/chat", async (req, res) => {
     const { message } = req.body;
 
     if (!message) {
