@@ -2,14 +2,15 @@ require("dotenv").config();
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
-const axios = require("axios");
-const stringSimilarity = require("string-similarity"); // Import fuzzy matching
+const { OpenAI } = require("openai"); // Import OpenAI SDK
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public"))); // Serve static files
+
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 // Load university data from JSON
 let universityData = {}; 
@@ -27,26 +28,15 @@ app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-// University Chatbot API (AI-powered)
+// AI-Powered University Chatbot API
 app.post("/chat", async (req, res) => {
     try {
-        let userMessage = req.body.message.toLowerCase();
+        const userMessage = req.body.message;
         console.log("User Message:", userMessage);
 
-        let bestMatchKey = null;
-        let bestMatchScore = 0;
-        let reply = "Sorry, I couldn't find relevant information. Try asking about admissions, courses, faculty, or fees.";
+        let bestMatchKey = await findBestMatch(userMessage);
 
-        // Get the list of available keywords
-        const keywords = Object.keys(universityData);
-
-        // Find the best match using fuzzy matching
-        const bestMatch = stringSimilarity.findBestMatch(userMessage, keywords);
-
-        if (bestMatch.bestMatch.rating > 0.5) {
-            bestMatchKey = bestMatch.bestMatch.target;
-            bestMatchScore = bestMatch.bestMatch.rating;
-        }
+        let reply = "Sorry, I couldn't find relevant information. Try asking about admissions, courses, faculty, or tuition fees.";
 
         if (bestMatchKey) {
             let extractedData = universityData[bestMatchKey];
@@ -56,13 +46,12 @@ app.post("/chat", async (req, res) => {
                 extractedData = formatResponse(extractedData);
             }
 
-            // 🎯 Step 1: Generate a conversational response using ChatGPT API
+            // 🎯 Step 1: Generate a conversational response using OpenAI
             const aiResponse = await getAIResponse(userMessage, extractedData);
-
             reply = aiResponse;
         }
 
-        console.log("Best Match:", bestMatchKey, "Score:", bestMatchScore);
+        console.log("Best Match:", bestMatchKey);
         console.log("Bot Reply:", reply);
 
         res.json({ reply });
@@ -71,6 +60,51 @@ app.post("/chat", async (req, res) => {
         res.status(500).json({ error: "Internal Server Error" });
     }
 });
+
+// ✅ Function to find the best match using AI embeddings
+async function findBestMatch(userQuery) {
+    try {
+        // Generate an embedding for the user's query
+        const userEmbedding = await getEmbedding(userQuery);
+
+        let bestMatch = null;
+        let highestScore = 0;
+
+        // Compare against all university data keys
+        for (const key in universityData) {
+            const keyEmbedding = await getEmbedding(key);
+            const similarityScore = cosineSimilarity(userEmbedding, keyEmbedding);
+
+            if (similarityScore > highestScore) {
+                highestScore = similarityScore;
+                bestMatch = key;
+            }
+        }
+
+        return highestScore > 0.75 ? bestMatch : null; // Only accept matches above 75% similarity
+    } catch (error) {
+        console.error("Error in findBestMatch:", error);
+        return null;
+    }
+}
+
+// ✅ Function to get OpenAI Embeddings for better semantic matching
+async function getEmbedding(text) {
+    const response = await openai.embeddings.create({
+        model: "text-embedding-ada-002",
+        input: text
+    });
+    return response.data[0].embedding;
+}
+
+// ✅ Function to calculate Cosine Similarity
+function cosineSimilarity(vecA, vecB) {
+    const dotProduct = vecA.reduce((sum, a, idx) => sum + a * vecB[idx], 0);
+    const magnitudeA = Math.sqrt(vecA.reduce((sum, a) => sum + a * a, 0));
+    const magnitudeB = Math.sqrt(vecB.reduce((sum, b) => sum + b * b, 0));
+
+    return dotProduct / (magnitudeA * magnitudeB);
+}
 
 // ✅ Helper function to format object responses
 function formatResponse(obj) {
@@ -81,28 +115,19 @@ function formatResponse(obj) {
     return formattedText.trim();
 }
 
-// ✅ Helper function to call OpenAI API for a conversational response
+// ✅ Function to call OpenAI API for conversational response
 async function getAIResponse(userQuery, extractedData) {
     try {
-        const response = await axios.post(
-            "https://api.openai.com/v1/chat/completions",
-            {
-                model: "gpt-3.5-turbo-1106", // Cheapest GPT-3.5 model
-                messages: [
-                    { role: "system", content: "You are an AI assistant that provides detailed university information in a friendly and conversational tone." },
-                    { role: "user", content: `User asked: "${userQuery}". Here is the related information: "${extractedData}". Now respond in a natural way.` }
-                ],
-                max_tokens: 150
-            },
-            {
-                headers: {
-                    "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
-                    "Content-Type": "application/json"
-                }
-            }
-        );
+        const response = await openai.chat.completions.create({
+            model: "gpt-3.5-turbo-1106", // Cheapest GPT-3.5 model
+            messages: [
+                { role: "system", content: "You are an AI assistant that provides detailed university information in a friendly and conversational tone." },
+                { role: "user", content: `User asked: "${userQuery}". Here is the related information: "${extractedData}". Now respond in a natural way.` }
+            ],
+            max_tokens: 150
+        });
 
-        return response.data.choices[0].message.content;
+        return response.choices[0].message.content;
     } catch (error) {
         console.error("OpenAI API Error:", error.response ? error.response.data : error.message);
         return "I'm having trouble generating a response right now. Please try again later.";
