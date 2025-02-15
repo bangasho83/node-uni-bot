@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatGPT Browser Chat</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin: 20px; }
+        input, button { padding: 10px; font-size: 16px; }
+        #chatbox { width: 90%; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 10px; height: 300px; overflow-y: auto; }
+        .message { padding: 5px; margin: 5px 0; }
+        .user { text-align: right; color: blue; }
+        .bot { text-align: left; color: green; }
+    </style>
+</head>
+<body>
+    <h2>Chat with GPT</h2>
+    <div id="chatbox"></div>
+    <input type="text" id="userInput" placeholder="Type a message..." />
+    <button onclick="sendMessage()">Send</button>
+
+    <script>
+        async function sendMessage() {
+            const userInput = document.getElementById("userInput").value;
+            if (!userInput) return;
+
+            // Display user message
+            const chatbox = document.getElementById("chatbox");
+            chatbox.innerHTML += `<div class="message user"><b>You:</b> ${userInput}</div>`;
+
+            // Send message to backend
+            const response = await fetch("/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message: userInput })
+            });
+
+            const data = await response.json();
+            const reply = data.reply || "Error getting response";
+
+            // Display ChatGPT response
+            chatbox.innerHTML += `<div class="message bot"><b>GPT:</b> ${reply}</div>`;
+
+            // Clear input field
+            document.getElementById("userInput").value = "";
+
+            // Auto-scroll
+            chatbox.scrollTop = chatbox.scrollHeight;
+        }
+    </script>
+</body>
+</html>
