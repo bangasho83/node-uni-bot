@@ -126,11 +126,11 @@ async function getAIResponse(userQuery, extractedData) {
         const response = await openai.chat.completions.create({
             model: "gpt-3.5-turbo-1106", // Cheapest GPT-3.5 model
             messages: [
-                { role: "system", content: "You are an AI assistant for the University of Oxford. Provide detailed, structured, and friendly responses with clear links when available." },
-                { role: "user", content: `User asked: "${userQuery}". Here is the related information: "${extractedData}". Respond in a structured format, making sure to include any provided URLs clearly at the end of your response.` }
+                { role: "system", content: "You are an AI assistant for the University of Oxford. Provide concise, engaging, and conversational responses. Keep answers short and to the point (max 3-4 sentences). Only include URLs if they are highly relevant to the question." },
+                { role: "user", content: `User asked: "${userQuery}". Here is the related information: "${extractedData}". Please provide a direct and precise response.` }
             ],
-            max_tokens: 300, // Increased token limit to prevent cutoff
-            temperature: 0.7 // Keeps responses balanced & informative
+            max_tokens: 150, // Reduced to avoid excessive output
+            temperature: 0.6 // Keeps responses informative but natural
         });
 
         return response.choices[0].message.content;
@@ -139,6 +139,7 @@ async function getAIResponse(userQuery, extractedData) {
         return "I'm having trouble generating a response right now. Please try again later.";
     }
 }
+
 
 // Start the server
 app.listen(port, () => {
