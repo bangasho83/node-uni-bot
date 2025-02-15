@@ -3,42 +3,146 @@
     "location": "Oxford, England",
     "established": "1096",
     "motto": "Dominus Illuminatio Mea (The Lord is my Light)",
-    
+    "website": "https://www.ox.ac.uk",
+
     "admissions": {
-        "overview": "Our admissions are highly competitive. Applications open from September and close in mid-October.",
+        "overview": "Oxford admissions are highly competitive. Applications open from September and close in mid-October.",
         "requirements": "Applicants must meet A-Level or IB requirements. Additional entrance exams may be required for some courses.",
-        "application_link": "https://www.ox.ac.uk/admissions"
+        "important_dates": "Application deadline: Mid-October | Interviews: December | Decisions: January",
+        "how_to_apply": "Undergraduate applications go through UCAS. Postgraduate applications are submitted via the university portal.",
+        "application_link": "https://www.ox.ac.uk/admissions",
+        "faqs": "https://www.ox.ac.uk/admissions/faq"
     },
 
     "courses": {
-        "undergraduate": ["Computer Science", "Law", "Medicine", "Economics", "Engineering"],
-        "postgraduate": ["MBA", "Physics", "Artificial Intelligence", "Linguistics", "Political Science"],
-        "catalog_link": "https://www.ox.ac.uk/courses"
+        "undergraduate": [
+            "Computer Science",
+            "Law",
+            "Medicine",
+            "Economics",
+            "Engineering",
+            "Philosophy",
+            "Physics",
+            "History"
+        ],
+        "postgraduate": [
+            "MBA",
+            "Physics",
+            "Artificial Intelligence",
+            "Linguistics",
+            "Political Science",
+            "Environmental Science"
+        ],
+        "special_programs": [
+            "Rhodes Scholarship Program",
+            "Clarendon Scholarships",
+            "DPhil (Doctor of Philosophy) Programs"
+        ],
+        "catalog_link": "https://www.ox.ac.uk/courses",
+        "faculty_directory": "https://www.ox.ac.uk/faculty"
     },
 
     "faculty": {
         "total_faculty": 7000,
-        "notable_professors": ["Stephen Hawking (Theoretical Physics)", "Richard Dawkins (Evolutionary Biology)", "Amartya Sen (Economics)"],
+        "notable_professors": [
+            "Stephen Hawking (Theoretical Physics)",
+            "Richard Dawkins (Evolutionary Biology)",
+            "Amartya Sen (Economics)",
+            "Tim Berners-Lee (Computer Science)"
+        ],
+        "departments": [
+            "Faculty of Law",
+            "Faculty of Medicine",
+            "Department of Engineering",
+            "Faculty of Humanities"
+        ],
+        "research_institutes": [
+            "Oxford Internet Institute",
+            "Oxford AI Research Center",
+            "Climate Change Institute"
+        ],
         "faculty_directory": "https://www.ox.ac.uk/faculty"
     },
 
     "campus_life": {
-        "housing": "Oxford offers on-campus accommodation for all first-year students.",
-        "sports": ["Rowing", "Rugby", "Football", "Cricket"],
+        "housing": {
+            "description": "Oxford offers on-campus accommodation for all first-year students and many postgraduate students.",
+            "housing_link": "https://www.ox.ac.uk/students/housing"
+        },
+        "sports": [
+            "Rowing",
+            "Rugby",
+            "Football",
+            "Cricket",
+            "Tennis",
+            "Swimming"
+        ],
         "student_societies": "Over 400 student societies, including debating, music, and drama clubs.",
-        "events": ["Oxford Union Debates", "May Ball", "Varsity Rugby Match"]
+        "events": [
+            "Oxford Union Debates",
+            "May Ball",
+            "Varsity Rugby Match",
+            "Oxford Science Festival"
+        ],
+        "student_life_link": "https://www.ox.ac.uk/students/life"
     },
 
     "tuition_fees": {
-        "undergraduate": "£9,250 per year (UK students), £39,000 per year (International students)",
-        "postgraduate": "Varies by program; ranges from £20,000 to £50,000 per year",
-        "scholarships": "Oxford offers multiple scholarships, including Rhodes and Clarendon Scholarships."
+        "undergraduate": {
+            "uk_students": "£9,250 per year",
+            "international_students": "£39,000 per year"
+        },
+        "postgraduate": {
+            "range": "Varies by program; ranges from £20,000 to £50,000 per year",
+            "research_programs": "Some programs offer funded research positions."
+        },
+        "scholarships": [
+            {
+                "name": "Rhodes Scholarship",
+                "description": "Covers full tuition and living expenses for international students.",
+                "link": "https://www.rhodeshouse.ox.ac.uk/"
+            },
+            {
+                "name": "Clarendon Scholarship",
+                "description": "Available for outstanding postgraduate applicants across all disciplines.",
+                "link": "https://www.ox.ac.uk/clarendon"
+            }
+        ],
+        "fees_overview_link": "https://www.ox.ac.uk/fees-and-funding"
+    },
+
+    "research": {
+        "focus_areas": [
+            "Artificial Intelligence",
+            "Climate Change",
+            "Medical Research",
+            "Quantum Computing",
+            "Social Sciences"
+        ],
+        "latest_breakthroughs": [
+            "Oxford-developed COVID-19 vaccine",
+            "Advances in AI ethics and governance",
+            "Quantum computing for secure communications"
+        ],
+        "research_link": "https://www.ox.ac.uk/research"
+    },
+
+    "career_services": {
+        "career_guidance": "Oxford provides career counseling, resume workshops, and employer networking events.",
+        "internships": "Students can apply for paid internships through the Oxford Careers Service.",
+        "entrepreneurship": "The Oxford Foundry supports student startups and business incubation.",
+        "career_services_link": "https://www.careers.ox.ac.uk"
     },
 
     "contact": {
         "email": "admissions@ox.ac.uk",
         "phone": "+44 1865 270000",
         "address": "University of Oxford, Oxford OX1 2JD, United Kingdom",
-        "website": "https://www.ox.ac.uk"
+        "website": "https://www.ox.ac.uk",
+        "social_media": {
+            "facebook": "https://www.facebook.com/the.university.of.oxford",
+            "twitter": "https://twitter.com/UniofOxford",
+            "linkedin": "https://www.linkedin.com/school/oxforduni/"
+        }
     }
 }
