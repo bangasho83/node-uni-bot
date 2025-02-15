@@ -4,11 +4,12 @@ const axios = require("axios");
 const cors = require("cors");
 
 const app = express();
+const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(cors());
 
-// API Route
+// API Route for ChatGPT
 app.post("/api/chat", async (req, res) => {
     const { message } = req.body;
 
@@ -39,5 +40,5 @@ app.post("/api/chat", async (req, res) => {
     }
 });
 
-// ✅ This is needed for Vercel
+// ✅ Important: Instead of starting a server, we export the app for Vercel
 module.exports = app;
