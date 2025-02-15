@@ -2,7 +2,6 @@ require("dotenv").config();
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
-const jsonFilePath = path.join(__dirname, "university_data.json");
 const app = express();
 const port = process.env.PORT || 3000;
 
