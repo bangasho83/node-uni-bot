@@ -4,12 +4,11 @@ const axios = require("axios");
 const cors = require("cors");
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(cors());
 
-// OpenAI API Route
+// API Route
 app.post("/api/chat", async (req, res) => {
     const { message } = req.body;
 
