@@ -29,8 +29,10 @@ app.post("/chat", async (req, res) => {
         let reply = "Sorry, I don't understand. Try asking about admissions, courses, faculty, or contact info.";
 
         // Check if the user's message contains any keyword from JSON
-        for (const key in universityData) {
-            if (userMessage.includes(key)) {  // Fuzzy matching
+        const keywords = Object.keys(universityData);
+        for (const key of keywords) {
+            const regex = new RegExp(`\\b${key}\\b`, "i"); // Word boundary match
+            if (regex.test(userMessage)) {
                 reply = universityData[key];
                 break;
             }
