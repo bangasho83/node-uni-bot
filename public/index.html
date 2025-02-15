@@ -16,16 +16,20 @@
 <body>
     <h2>Oxford University Bot</h2>
     <div id="chatbox"></div>
-    <input type="text" id="userInput" placeholder="Type a message..." />
-    <button onclick="sendMessage()">Send</button>
+    <div>
+        <input type="text" id="userInput" placeholder="Type a message..." />
+        <button onclick="sendMessage()">Send</button>
+    </div>
+    <div>
     <small>Welcome to the oxford university admissions assistant. You Ask me things like...</small>
-    <p>
-        <ul>
-            <li>Which subjects do you offer?</li>
-            <li>When are the admissions?</li>
-            <li>What are you fee?</li>
-        </ul>
-    </p>
+        <p>
+            <ul>
+                <li>Which subjects do you offer?</li>
+                <li>When are the admissions?</li>
+                <li>What are you fee?</li>
+            </ul>
+        </p>
+    </div>
     <script>
         async function sendMessage() {
             const userInput = document.getElementById("userInput").value;
