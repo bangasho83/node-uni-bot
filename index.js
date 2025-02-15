@@ -1,34 +1,19 @@
 require("dotenv").config();
 const express = require("express");
 const axios = require("axios");
-const path = require("path");
+const cors = require("cors");
 
 const app = express();
-const port = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;
 
-app.use(express.json()); // Middleware to parse JSON
-app.use(express.static("public")); // Serve static files (HTML, CSS, JS)
+app.use(express.json());
+app.use(cors());
 
-// Serve the HTML page at the root URL
-app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "public", "index.html"));
-});
+// API Route for ChatGPT
+app.post("/api/chat", async (req, res) => {
+    const { message } = req.body;
 
-// Rate limiting to prevent too many requests
-let lastRequestTime = 0;
-const requestCooldown = 3000; // 3 seconds cooldown
-
-// ChatGPT API endpoint
-app.post("/chat", async (req, res) => {
-    const now = Date.now();
-    if (now - lastRequestTime < requestCooldown) {
-        return res.status(429).json({ error: "Too many requests. Please wait a few seconds." });
-    }
-
-    lastRequestTime = now;
-
-    const userMessage = req.body.message;
-    if (!userMessage) {
+    if (!message) {
         return res.status(400).json({ error: "Message is required" });
     }
 
@@ -36,26 +21,24 @@ app.post("/chat", async (req, res) => {
         const response = await axios.post(
             "https://api.openai.com/v1/chat/completions",
             {
-                model: "gpt-3.5-turbo-1106", // More optimized version
-                messages: [{ role: "user", content: userMessage }],
-                max_tokens: 50 // Limit response length
+                model: "gpt-3.5-turbo",
+                messages: [{ role: "user", content: message }],
+                temperature: 0.7,
             },
             {
                 headers: {
-                    "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
-                    "Content-Type": "application/json"
-                }
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+                },
             }
         );
 
         res.json({ reply: response.data.choices[0].message.content });
     } catch (error) {
-        console.error("OpenAI API Error:", error.response ? error.response.data : error.message);
-        res.status(500).json({ error: "Something went wrong", details: error.message });
+        console.error(error.response ? error.response.data : error.message);
+        res.status(500).json({ error: "Something went wrong" });
     }
 });
 
-// Start the server
-app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
-});
+// ✅ Important: Instead of starting a server, we export the app for Vercel
+module.exports = app;
