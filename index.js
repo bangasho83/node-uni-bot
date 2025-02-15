@@ -2,7 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
-//const jsonFilePath = path.join(__dirname, "university_data.json");
+const jsonFilePath = path.join(__dirname, "university_data.json");
 //console.log("🔍 Checking JSON file at:", jsonFilePath);
 
 const app = express();
