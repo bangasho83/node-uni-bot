@@ -110,21 +110,27 @@ function cosineSimilarity(vecA, vecB) {
 function formatResponse(obj) {
     let formattedText = "";
     for (const key in obj) {
-        formattedText += `${key.replace(/_/g, " ")}: ${obj[key]}\n`;
+        if (typeof obj[key] === "object") {
+            formattedText += `\n**${key.replace(/_/g, " ")}:**\n`;
+            formattedText += formatResponse(obj[key]);
+        } else {
+            formattedText += `**${key.replace(/_/g, " ")}:** ${obj[key]}\n`;
+        }
     }
     return formattedText.trim();
 }
 
-// ✅ Function to call OpenAI API for conversational response
+// ✅ Function to call OpenAI API for structured responses
 async function getAIResponse(userQuery, extractedData) {
     try {
         const response = await openai.chat.completions.create({
             model: "gpt-3.5-turbo-1106", // Cheapest GPT-3.5 model
             messages: [
-                { role: "system", content: "You are an AI assistant that provides detailed university information in a friendly and conversational tone." },
-                { role: "user", content: `User asked: "${userQuery}". Here is the related information: "${extractedData}". Now respond in a natural way.` }
+                { role: "system", content: "You are an AI assistant for the University of Oxford. Provide detailed, structured, and friendly responses with clear links when available." },
+                { role: "user", content: `User asked: "${userQuery}". Here is the related information: "${extractedData}". Respond in a structured format, making sure to include any provided URLs clearly at the end of your response.` }
             ],
-            max_tokens: 150
+            max_tokens: 300, // Increased token limit to prevent cutoff
+            temperature: 0.7 // Keeps responses balanced & informative
         });
 
         return response.choices[0].message.content;
