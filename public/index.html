@@ -3,36 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>University Bot</title>
+    <title>Oxford University Bot</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; margin: 20px; }
-        input, button { padding: 10px; font-size: 16px; }
-        #chatbox { width: 90%; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 10px; height: 300px; overflow-y: auto; }
-        .message { padding: 5px; margin: 5px 0; }
-        .user { text-align: right; color: blue; }
-        .bot { text-align: left; color: green; }
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        h2 {
+            background: #003366;
+            color: white;
+            padding: 15px;
+            margin: 0;
+            font-size: 22px;
+        }
+        #chatbox {
+            width: 90%;
+            max-width: 600px;
+            margin: 20px auto;
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            height: 400px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        .message {
+            display: block;
+            max-width: 80%;
+            padding: 10px;
+            margin: 5px;
+            border-radius: 10px;
+            font-size: 16px;
+            word-wrap: break-word;
+        }
+        .user {
+            background: #0078D7;
+            color: white;
+            text-align: right;
+            margin-left: auto;
+        }
+        .bot {
+            background: #E1E1E1;
+            color: black;
+            text-align: left;
+            margin-right: auto;
+        }
+        #userInput {
+            width: 80%;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            outline: none;
+        }
+        button {
+            background: #003366;
+            color: white;
+            border: none;
+            padding: 12px 15px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-left: 5px;
+        }
+        button:hover {
+            background: #0055A5;
+        }
+        .chat-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        .instructions {
+            background: white;
+            max-width: 600px;
+            margin: 10px auto;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #666;
+            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+        }
     </style>
 </head>
 <body>
-    <h2>Oxford University Bot</h2>
-    <div id="chatbox"></div>
-    <div>
-        <input type="text" id="userInput" placeholder="Type a message..." />
-        <button onclick="sendMessage()">Send</button>
-    </div>
-    <div>
-    <small>Welcome to the oxford university admissions assistant. You Ask me things like...</small>
-        <p>
+    <h2>Oxford University Admissions Assistant</h2>
+    
+    <div class="chat-container">
+        <div id="chatbox"></div>
+
+        <div>
+            <input type="text" id="userInput" placeholder="Type a message..." />
+            <button onclick="sendMessage()">Send</button>
+        </div>
+
+        <div class="instructions">
+            <p><strong>Welcome! You can ask me about:</strong></p>
             <ul>
-                <li>Which subjects do you offer?</li>
-                <li>When are the admissions?</li>
-                <li>What are you fee?</li>
+                <li>📚 What courses do you offer?</li>
+                <li>📅 When are the admissions?</li>
+                <li>💰 How much is the tuition fee?</li>
+                <li>🏫 How can I apply?</li>
             </ul>
-        </p>
+        </div>
     </div>
+
     <script>
         async function sendMessage() {
-            const userInput = document.getElementById("userInput").value;
+            const userInput = document.getElementById("userInput").value.trim();
             if (!userInput) return;
 
             // Display user message
@@ -40,23 +124,29 @@
             chatbox.innerHTML += `<div class="message user"><b>You:</b> ${userInput}</div>`;
 
             // Send message to backend
-            const response = await fetch("/chat", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ message: userInput })
-            });
+            try {
+                const response = await fetch("/chat", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ message: userInput })
+                });
 
-            const data = await response.json();
-            const reply = data.reply || "Error getting response";
+                const data = await response.json();
+                const reply = data.reply || "I'm sorry, I couldn't find an answer.";
 
-            // Display ChatGPT response
-            chatbox.innerHTML += `<div class="message bot"><b>GPT:</b> ${reply}</div>`;
+                // Display bot response
+                chatbox.innerHTML += `<div class="message bot"><b>Bot:</b> ${reply}</div>`;
+
+                // Auto-scroll to the latest message
+                chatbox.scrollTop = chatbox.scrollHeight;
+
+            } catch (error) {
+                console.error("Error fetching chat response:", error);
+                chatbox.innerHTML += `<div class="message bot"><b>Bot:</b> Error getting response. Please try again later.</div>`;
+            }
 
             // Clear input field
             document.getElementById("userInput").value = "";
-
-            // Auto-scroll
-            chatbox.scrollTop = chatbox.scrollHeight;
         }
     </script>
 </body>
