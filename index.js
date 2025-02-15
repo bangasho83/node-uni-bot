@@ -2,6 +2,8 @@ require("dotenv").config();
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
+const stringSimilarity = require("string-similarity"); // Import fuzzy matching
+
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -24,9 +26,7 @@ app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-// University Chatbot API
-const stringSimilarity = require("string-similarity"); // Import fuzzy matching library
-
+// University Chatbot API with Fuzzy Matching
 app.post("/chat", async (req, res) => {
     try {
         const userMessage = req.body.message.toLowerCase();
@@ -37,7 +37,7 @@ app.post("/chat", async (req, res) => {
         // Get the list of available keywords
         const keywords = Object.keys(universityData);
 
-        // Find the best match (allows small spelling mistakes)
+        // Find the best match using fuzzy matching
         const bestMatch = stringSimilarity.findBestMatch(userMessage, keywords);
 
         if (bestMatch.bestMatch.rating > 0.5) { // If match is at least 50% similar
@@ -56,7 +56,6 @@ app.post("/chat", async (req, res) => {
         res.status(500).json({ error: "Internal Server Error" });
     }
 });
-
 
 // ✅ Helper function to format object responses
 function formatResponse(obj) {
