@@ -25,6 +25,8 @@ app.get("/", (req, res) => {
 });
 
 // University Chatbot API
+const stringSimilarity = require("string-similarity"); // Import fuzzy matching library
+
 app.post("/chat", async (req, res) => {
     try {
         const userMessage = req.body.message.toLowerCase();
@@ -32,33 +34,29 @@ app.post("/chat", async (req, res) => {
 
         let reply = "Sorry, I don't understand. Try asking about admissions, courses, faculty, or contact info.";
 
-        // Try finding the best match for user input
+        // Get the list of available keywords
         const keywords = Object.keys(universityData);
-        let foundMatch = false;
 
-        for (const key of keywords) {
-            if (userMessage.includes(key.toLowerCase())) {
-                let response = universityData[key]; 
+        // Find the best match (allows small spelling mistakes)
+        const bestMatch = stringSimilarity.findBestMatch(userMessage, keywords);
 
-                // ✅ Check if response is an object, format it nicely
-                if (typeof response === "object") {
-                    reply = formatResponse(response);
-                } else {
-                    reply = response;
-                }
+        if (bestMatch.bestMatch.rating > 0.5) { // If match is at least 50% similar
+            let response = universityData[bestMatch.bestMatch.target];
 
-                foundMatch = true;
-                break;
-            }
+            // ✅ Handle object responses properly
+            reply = typeof response === "object" ? formatResponse(response) : response;
         }
 
+        console.log("Best Match:", bestMatch.bestMatch.target, "Score:", bestMatch.bestMatch.rating);
         console.log("Bot Reply:", reply);  // Debugging log
+
         res.json({ reply });
     } catch (error) {
         console.error("Chat API Error:", error);
         res.status(500).json({ error: "Internal Server Error" });
     }
 });
+
 
 // ✅ Helper function to format object responses
 function formatResponse(obj) {
