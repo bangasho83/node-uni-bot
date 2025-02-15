@@ -1,6 +1,44 @@
 {
-    "admissions": "Our admissions are open from June to August. You can apply online at our official website.",
-    "courses": "We offer courses in Computer Science, Business, and Engineering. Check our course catalog online.",
-    "faculty": "Our faculty members are experienced professionals in their fields. Visit our faculty directory for details.",
-    "contact": "You can contact the university at contact@uni.edu or call +1-800-123-4567."
+    "university_name": "University of Oxford",
+    "location": "Oxford, England",
+    "established": "1096",
+    "motto": "Dominus Illuminatio Mea (The Lord is my Light)",
+    
+    "admissions": {
+        "overview": "Our admissions are highly competitive. Applications open from September and close in mid-October.",
+        "requirements": "Applicants must meet A-Level or IB requirements. Additional entrance exams may be required for some courses.",
+        "application_link": "https://www.ox.ac.uk/admissions"
+    },
+
+    "courses": {
+        "undergraduate": ["Computer Science", "Law", "Medicine", "Economics", "Engineering"],
+        "postgraduate": ["MBA", "Physics", "Artificial Intelligence", "Linguistics", "Political Science"],
+        "catalog_link": "https://www.ox.ac.uk/courses"
+    },
+
+    "faculty": {
+        "total_faculty": 7000,
+        "notable_professors": ["Stephen Hawking (Theoretical Physics)", "Richard Dawkins (Evolutionary Biology)", "Amartya Sen (Economics)"],
+        "faculty_directory": "https://www.ox.ac.uk/faculty"
+    },
+
+    "campus_life": {
+        "housing": "Oxford offers on-campus accommodation for all first-year students.",
+        "sports": ["Rowing", "Rugby", "Football", "Cricket"],
+        "student_societies": "Over 400 student societies, including debating, music, and drama clubs.",
+        "events": ["Oxford Union Debates", "May Ball", "Varsity Rugby Match"]
+    },
+
+    "tuition_fees": {
+        "undergraduate": "£9,250 per year (UK students), £39,000 per year (International students)",
+        "postgraduate": "Varies by program; ranges from £20,000 to £50,000 per year",
+        "scholarships": "Oxford offers multiple scholarships, including Rhodes and Clarendon Scholarships."
+    },
+
+    "contact": {
+        "email": "admissions@ox.ac.uk",
+        "phone": "+44 1865 270000",
+        "address": "University of Oxford, Oxford OX1 2JD, United Kingdom",
+        "website": "https://www.ox.ac.uk"
+    }
 }
