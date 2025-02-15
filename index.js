@@ -10,7 +10,7 @@ app.use(express.json());
 app.use(cors());
 
 // OpenAI API Route
-app.post("/chat", async (req, res) => {
+app.post("/api/chat", async (req, res) => {
     const { message } = req.body;
 
     if (!message) {
@@ -40,5 +40,5 @@ app.post("/chat", async (req, res) => {
     }
 });
 
-// Export the app for Vercel
+// ✅ This is needed for Vercel
 module.exports = app;
