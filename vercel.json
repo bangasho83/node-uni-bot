@@ -1,6 +1,11 @@
 {
-    "version": 2,
-    "builds": [{ "src": "index.js", "use": "@vercel/node" }],
-    "routes": [{ "src": "/(.*)", "dest": "index.js" }]
+  "version": 2,
+  "builds": [{ "src": "index.js", "use": "@vercel/node" }],
+  "routes": [{ "src": "/(.*)", "dest": "index.js" }],
+  "functions": {
+    "index.js": {
+      "includeFiles": ["university_data.json"]
+    }
   }
-  
+}
+
