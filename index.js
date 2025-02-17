@@ -120,7 +120,6 @@ function formatResponse(obj) {
     return formattedText.trim();
 }
 
-// ✅ Function to call OpenAI API for structured responses with clickable links
 // ✅ Function to call OpenAI API for structured responses with token usage count
 async function getAIResponse(userQuery, extractedData) {
     try {
