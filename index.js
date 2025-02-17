@@ -121,17 +121,16 @@ function formatResponse(obj) {
 }
 
 // ✅ Function to call OpenAI API for structured responses with clickable links
-async function getAIResponse(userQuery) {
+async function getAIResponse(userQuery, extractedData) {
     try {
-        // Send the full university data to OpenAI for deeper reasoning
         const response = await openai.chat.completions.create({
-            model: "gpt-3.5-turbo-1106", // Cheapest GPT-3.5 model
+            model: "gpt-3.5-turbo-1106",
             messages: [
-                { role: "system", content: "You are an AI assistant for the University of Oxford. Instead of just looking for keywords, analyze the entire university dataset and provide the most relevant information. If a topic is related to another topic, provide both in a natural, conversational way." },
-                { role: "user", content: `User asked: "${userQuery}". Here is the full university dataset: ${JSON.stringify(universityData)}. Extract the most relevant details in a conversational and structured format, making sure to include related topics where necessary.` }
+                { role: "system", content: "You are an AI assistant for the University of Oxford. Provide concise, engaging, and conversational responses. Keep answers short and to the point (max 3-4 sentences). Only include URLs if they are highly relevant to the question. Format any URLs as HTML links, like this: <a href='URL' target='_blank'>Visit Here</a>." },
+                { role: "user", content: `User asked: "${userQuery}". Here is the related information: "${extractedData}". Please provide a direct and precise response with clickable links.` }
             ],
-            max_tokens: 250, // Allowing slightly more room for deeper responses
-            temperature: 0.6 // Balanced creativity vs factual precision
+            max_tokens: 150,
+            temperature: 0.6
         });
 
         return response.choices[0].message.content;
@@ -140,9 +139,6 @@ async function getAIResponse(userQuery) {
         return "I'm having trouble generating a response right now. Please try again later.";
     }
 }
-
-
-
 
 
 // Start the server
