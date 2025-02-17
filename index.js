@@ -121,6 +121,7 @@ function formatResponse(obj) {
 }
 
 // ✅ Function to call OpenAI API for structured responses with clickable links
+// ✅ Function to call OpenAI API for structured responses with token usage count
 async function getAIResponse(userQuery, extractedData) {
     try {
         const response = await openai.chat.completions.create({
@@ -133,7 +134,13 @@ async function getAIResponse(userQuery, extractedData) {
             temperature: 0.6
         });
 
-        return response.choices[0].message.content;
+        // Extract token usage from API response
+        const inputTokens = response.usage?.prompt_tokens || 0;
+        const outputTokens = response.usage?.completion_tokens || 0;
+        const totalTokens = inputTokens + outputTokens;
+
+        // Append token count at the end of the response
+        return `${response.choices[0].message.content} [Tokens used: ${totalTokens}]`;
     } catch (error) {
         console.error("OpenAI API Error:", error.response ? error.response.data : error.message);
         return "I'm having trouble generating a response right now. Please try again later.";
